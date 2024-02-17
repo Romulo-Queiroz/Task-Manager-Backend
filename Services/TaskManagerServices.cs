@@ -151,16 +151,12 @@ namespace Todo.Services
 
             if (taskToEdit == null) return new NotFoundResult();
 
-            taskToEdit = new TaskEntity()
-            {
-                Title = model.Title,
-                Description = model.Description
-            };
-
-            context.Tasks.Update(taskToEdit);
+            taskToEdit.Title = model.Title;
+            taskToEdit.Description = model.Description;
+          
             context.SaveChanges();
 
-            return Ok(taskToEdit);
+            return Ok(new { taskId = taskToEdit.Id });
         } 
         public IActionResult DeleteTask (int id)
         {
@@ -179,7 +175,8 @@ namespace Todo.Services
 
             if (task == null) return new BadRequestResult();
 
-            task.Done = !task.Done;
+            task.Done = true;
+            task.FinishedAt = DateTime.Now;
 
             context.Tasks.Update(task);
             context.SaveChanges();
